@@ -15,6 +15,23 @@ Class Cmd {
 	private $curr_cmd;
 	private $curr_cmd_args;
 
+	private function do_help() {
+		if(!isset($this->curr_cmd_args[0])) {
+			$this->cmd_print("help <command>");
+			return;
+		}
+		$cmd_name = $this->curr_cmd_args[0];
+
+		$func = "help_$cmd_name";
+
+		if (!method_exists($this, $func)) {
+			$this->cmd_print("*** No help on '$cmd_name' ***");
+			return;
+		}
+
+		$this->$func($this->curr_cmd_args);
+	}
+
 	private function exec() {
 
 		$func = "do_" . $this->curr_cmd;

@@ -20,6 +20,11 @@ class CmdTest extends Cmd {
 		print "World!\n";
 	}
 
+	public function help_hello()
+	{
+		print "Print 'World!'\n";
+	}
+
 	public function do_testcmd($args) {
 		$args = func_get_args();
 
