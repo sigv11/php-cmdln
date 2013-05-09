@@ -18,6 +18,7 @@ Class Cmd {
 
 	function __construct() {
 		$this->home_dir = getenv("HOME");
+		pcntl_sigprocmask(SIG_BLOCK, array(SIGINT, SIGUSR1, SIGUSR2));
 	}
 
 	private function do_help() {
