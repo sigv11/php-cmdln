@@ -21,7 +21,7 @@ Class Cmd {
 	}
 
 	private function do_help() {
-		if(!isset($this->curr_cmd_args[0])) {
+		if (!isset($this->curr_cmd_args[0])) {
 			$this->cmd_print("help <command>");
 			return;
 		}
@@ -57,6 +57,10 @@ Class Cmd {
 		readline_write_history($this->home_dir . "/.php-cmdln.history");
 	}
 
+	private function print_prompt() {
+		print "{$this->PROMPT}>>> ";
+	}
+
 	public function get_prompt() {
 		return $this->PROMPT;
 	}
@@ -78,10 +82,27 @@ Class Cmd {
 		$this->curr_cmd_args = array_slice($tmp, 1);
 	}
 
+	private function do_complete($input, $index) {
+		//$rl_info = readline_info();
+		//$partial_input = substr($rl_info['line_buffer'], 0, $rl_info['point']);
+
+		if (method_exists($this, "get_command_list")) {
+			return $this->get_command_list();
+		}
+
+		return null;
+	}
+
+	private function complete() {
+		readline_completion_function(array($this, 'do_complete'));
+	}
+
 	public function commandloop() {
 		$this->read_history();
 
 		while (!$this->STOP) {
+			$this->complete();
+
 			$this->curr_input = readline($this->PROMPT . '>>> ');
 			if ($this->curr_input === false) {
 				$this->STOP = true;
