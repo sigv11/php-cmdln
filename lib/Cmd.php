@@ -14,6 +14,11 @@ Class Cmd {
 	private $curr_input;
 	private $curr_cmd;
 	private $curr_cmd_args;
+	private $home_dir;
+
+	function __construct() {
+		$this->home_dir = getenv("HOME");
+	}
 
 	private function do_help() {
 		if(!isset($this->curr_cmd_args[0])) {
@@ -44,6 +49,14 @@ Class Cmd {
 		$this->$func($this->curr_cmd_args);
 	}
 
+	private function read_history() {
+		readline_read_history($this->home_dir . "/.php-cmdln.history");
+	}
+
+	private function write_history() {
+		readline_write_history($this->home_dir . "/.php-cmdln.history");
+	}
+
 	public function get_prompt() {
 		return $this->PROMPT;
 	}
@@ -66,6 +79,8 @@ Class Cmd {
 	}
 
 	public function commandloop() {
+		$this->read_history();
+
 		while (!$this->STOP) {
 			$this->curr_input = readline($this->PROMPT . '>>> ');
 			if ($this->curr_input === false) {
@@ -84,6 +99,8 @@ Class Cmd {
 
 			readline_add_history($this->curr_input);
 		}
+
+		$this->write_history();
 	}
 
 }
